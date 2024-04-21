@@ -1,17 +1,18 @@
 "use client";
-import { Suspense, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import NavBar from "@/components/NavBar";
+import Footer from "@/components/Footer";
 import Rating from "@/components/Rating";
-import Heading from "@/components/heading";
 import Comments from "@/components/Comments";
 import ProductPageSlider from "@/components/SwiperSliders/ProductPageSlider";
 import { Button, Chip, Divider, Skeleton } from "@nextui-org/react";
 
-import type { ProductProps } from "@/types";
 import { getProduct } from "./action/getProduct";
 import { CartContext } from "@/components/CartContext";
-import Footer from "@/components/Footer";
+import NotFoundPage from "@/components/not-found-page";
+import type { Error, ProductProps } from "@/types";
+import { PRODUCT_NOT_FOUND } from "@/errors";
 
 export default function ProductPage({
   params,
@@ -21,10 +22,7 @@ export default function ProductPage({
   const { addToCart } = useContext(CartContext);
   const [loading, setLoading] = useState<boolean>(true);
   const [product, setProduct] = useState<ProductProps | null>();
-  const [error, setError] = useState<{ status: boolean; message: string }>({
-    status: true,
-    message: "",
-  });
+  const [error, setError] = useState<Error>();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -34,7 +32,7 @@ export default function ProductPage({
       });
       setLoading(false);
       if (!fetchedProduct) {
-        setError({ status: false, message: "Product not found" });
+        setError({ status: true, message: PRODUCT_NOT_FOUND });
         return;
       }
       setProduct(fetchedProduct);
@@ -46,6 +44,7 @@ export default function ProductPage({
     <>
       <NavBar />
       <section className="px-4 py-8">
+        {error?.status && <NotFoundPage error={error} />}
         {loading && (
           <div className="relative max-w-xl lg:max-w-4xl flex flex-col gap-4 lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8 mx-auto">
             <div>
@@ -100,7 +99,7 @@ export default function ProductPage({
                 <div className="mt-4">
                   <p
                     className="line-clamp-6 text-medium text-default-500"
-                    title={product.description ?? ""}
+                    title={product.description ?? undefined}
                   >
                     {product.description}
                   </p>
@@ -118,7 +117,9 @@ export default function ProductPage({
                   <Button
                     color="primary"
                     isDisabled={product.quantity < 1}
-                    onPress={() => addToCart(product)}
+                    onPress={async () => {
+                      await addToCart(product);
+                    }}
                   >
                     Добавить в корзину
                   </Button>
@@ -129,16 +130,7 @@ export default function ProductPage({
             <Comments value={product} />
           </>
         )}
-        {!error?.status && (
-          <div className="flex flex-col items-center">
-            <Heading
-              title="Продукт не обнаружен"
-              descriptions="Попробуйте обновить страницу, или подобрать что-то другое в нашем меню."
-            />
-          </div>
-        )}
       </section>
-
       <Footer />
     </>
   );

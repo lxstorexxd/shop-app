@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import SessionProvider from "@/components/SessionProvider";
 import { Providers } from "./providers";
 import "./globals.css";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: "ЛИС",
@@ -21,10 +20,7 @@ export default async function RootLayout({
     <html lang="ru">
       <body>
         <SessionProvider session={session}>
-          <Providers>
-            {children}
-            <SpeedInsights />
-          </Providers>
+          <Providers>{children}</Providers>
         </SessionProvider>
       </body>
     </html>
