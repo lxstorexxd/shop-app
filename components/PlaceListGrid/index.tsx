@@ -77,7 +77,7 @@ const PlaceListGrid = ({
                   <div className="flex items-center gap-1">
                     <Icon name="star" size={24} className="fill-yellow-400" />
                     <span className="text-large text-default-500">
-                      {data.rating}
+                      {data.rating.toFixed(1)}
                     </span>
                   </div>
                 </div>

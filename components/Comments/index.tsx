@@ -7,35 +7,45 @@ import {
   ModalBody,
   useDisclosure,
   Textarea,
+  Divider,
+  Link,
 } from "@nextui-org/react";
 import Icon from "@/lib/IconSprite";
 import Rating from "@/components/Rating";
 import type { ProductProps, Comment } from "@/types";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ModalAuthorization from "@/components//ModalAuthorization";
 import { useSession } from "next-auth/react";
 import { createComment } from "@/action/create-comment";
 
 const Comments = ({ value }: { value: ProductProps }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const { data: session } = useSession();
   const [rating, setRating] = useState(0);
+  const { data: session, status, update } = useSession();
   const [comments, setComments] = useState<Comment[]>(value.comments);
 
+  useEffect(() => {
+    if (status === "authenticated" || status === "loading") update();
+  }, []);
 
   const handleCreateCommment = async (formData: FormData) => {
-    console.log(session);
-    if (session && session.user) {
-      const newComment = await createComment({
-        author: String(12),
-        content: String(formData.get("comment")),
-        rating: rating,
-        totalRating: value.rating,
-        productId: value.id,
-      });
-      setComments((prevComments) => [...prevComments, newComment]);
-    } else {
-      console.log("Сессия не определена, войдите в аккаунт повторно.");
+    try {
+      if (session && session.user) {
+        const newComment = await createComment({
+          author: session.user.id,
+          content: String(formData.get("comment")),
+          rating: rating,
+          totalRating: value.rating,
+          productId: value.id,
+        });
+        setComments((prevComments) => [...prevComments, newComment]);
+      } else {
+        console.log("Сессия не определена, войдите в аккаунт повторно.");
+      }
+    } catch (error) {
+      console.log(
+        "Ошибка создания комментария. Попробуйте войти в аккаунт повторно!"
+      );
     }
   };
 
@@ -64,14 +74,34 @@ const Comments = ({ value }: { value: ProductProps }) => {
             <ModalContent>
               {(onClose) => (
                 <>
-                  <ModalHeader className="flex flex-col gap-1 pt-8">
-                    <h1 className="text-large font-semibold">Оставте отзыв</h1>
+                  <ModalHeader className="flex flex-col gap-1 pt-4">
+                    <h1 className="text-2xl font-semibold">Оставте отзыв</h1>
+                    <p className="text-base font-normal text-default-400">
+                      Нам будет очень приятно узнать ваше мнение!
+                    </p>
                   </ModalHeader>
                   <ModalBody className="pb-8">
                     <form
-                      action={handleCreateCommment}
-                      className="flex flex-col gap-6"
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        handleCreateCommment(new FormData(e.currentTarget));
+                      }}
+                      className="flex flex-col gap-4"
                     >
+                      <div>
+                        <User
+                          name={session.user.name}
+                          description={
+                            <Link size="sm" isExternal>
+                              {session.user.email}
+                            </Link>
+                          }
+                          avatarProps={{
+                            src: session.user.image,
+                          }}
+                        />
+                      </div>
+                      <Divider />
                       <div className="mr-auto">
                         <Rating
                           head="Рейтинг"
@@ -110,6 +140,9 @@ const Comments = ({ value }: { value: ProductProps }) => {
                 <User
                   name={comment.author.name}
                   description={new Date(comment.createdAt).toLocaleString()}
+                  avatarProps={{
+                    src: comment.author.image ?? undefined,
+                  }}
                 />
                 <Rating value={comment.rating} isDisable={true} isCompact />
               </div>

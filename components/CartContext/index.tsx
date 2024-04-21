@@ -35,7 +35,7 @@ export const ContextProvider = ({
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  const addToCart = (productToAdd: ProductProps) => {
+  const addToCart = async (productToAdd: ProductProps) => {
     const existingCartItem = cart.find(
       (item) => item.product.id === productToAdd.id
     );

@@ -34,7 +34,10 @@ export async function createComment({
       id: productId,
     },
     data: {
-      rating: ((totalRating > 0 ? totalRating : rating) + rating) / 2,
+      rating:
+        rating > 0
+          ? ((totalRating > 0 ? totalRating : rating) + rating) / 2
+          : totalRating,
     },
   });
 

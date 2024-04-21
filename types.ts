@@ -47,3 +47,11 @@ export interface FiltersProps {
   };
   category?: string[];
 }
+
+export interface Error {
+  status: boolean;
+  message: {
+    title: string;
+    description: string;
+  };
+}
