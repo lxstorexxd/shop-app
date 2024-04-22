@@ -30,7 +30,7 @@ const Comments = ({ value }: { value: ProductProps }) => {
 
   const handleCreateCommment = async (formData: FormData) => {
     try {
-      if (session && session.user) {
+      if (session && session.user.id) {
         const newComment = await createComment({
           author: session.user.id,
           content: String(formData.get("comment")),
