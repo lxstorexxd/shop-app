@@ -23,7 +23,7 @@ const handler = NextAuth({
   secret: process.env.NEXTAUTH_SECRET as string,
   callbacks: {
     async jwt({ token, user, session }) {
-      console.log("jwt callback", { token, user, session });
+      // console.log("jwt callback", { token, user, session });
       if (user) {
         return {
           ...token,
@@ -34,7 +34,7 @@ const handler = NextAuth({
     },
 
     async session({ session, token, user }) {
-      console.log("session callback", { session, token, user });
+      // console.log("session callback", { session, token, user });
       return {
         ...session,
         user: {
