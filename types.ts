@@ -49,7 +49,7 @@ export interface FiltersProps {
     min: number;
     max: number;
   };
-  // rating?: number;
+  rating?: number;
   category?: string[];
 }
 
