@@ -41,10 +41,15 @@ export interface FiltersProps {
     title: string;
     method: string;
   };
-  price: {
+  totalPrice: {
     min: number;
     max: number;
   };
+  rangePrice: {
+    min: number;
+    max: number;
+  };
+  // rating?: number;
   category?: string[];
 }
 
