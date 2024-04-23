@@ -8,7 +8,7 @@ import Comments from "@/components/Comments";
 import ProductPageSlider from "@/components/SwiperSliders/ProductPageSlider";
 import { Button, Chip, Divider, Skeleton } from "@nextui-org/react";
 
-import { getProduct } from "./action/getProduct";
+import { getProduct } from "@/action/get-product";
 import { CartContext } from "@/components/CartContext";
 import NotFoundPage from "@/components/not-found-page";
 import type { Error, ProductProps } from "@/types";

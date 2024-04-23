@@ -28,10 +28,9 @@ const Comments = ({ value }: { value: ProductProps }) => {
     if (status === "authenticated" || status === "loading") update();
   }, []);
 
-/*
   const handleCreateCommment = async (formData: FormData) => {
     try {
-      if (session && session.user.id) {
+      if (session && session.user) {
         const newComment = await createComment({
           author: session.user.id,
           content: String(formData.get("comment")),
@@ -49,7 +48,6 @@ const Comments = ({ value }: { value: ProductProps }) => {
       );
     }
   };
-*/
 
   return (
     <div className="mx-auto w-full max-w-4xl">
@@ -84,11 +82,10 @@ const Comments = ({ value }: { value: ProductProps }) => {
                   </ModalHeader>
                   <ModalBody className="pb-8">
                     <form
-/*
                       onSubmit={(e) => {
                         e.preventDefault();
                         handleCreateCommment(new FormData(e.currentTarget));
-                      }}*/
+                      }}
                       className="flex flex-col gap-4"
                     >
                       <div>

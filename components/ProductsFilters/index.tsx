@@ -1,86 +1,75 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  Button,
   Modal,
   ModalContent,
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Button,
-  useDisclosure,
-  Slider,
   Input,
+  Slider,
   Accordion,
   AccordionItem,
   CheckboxGroup,
   Checkbox,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
+  useDisclosure,
 } from "@nextui-org/react";
-import { getCategories } from "./action/getCategories";
-import type { FiltersProps } from "@/types";
+import { getCategories } from "@/action/get-categories";
+import Rating from "@/components/Rating";
+import { FiltersProps } from "@/types";
 
-interface CategoriesProps {
-  id: number;
-  name: string;
-}
-
-const ProductsFilters = ({
+const Filters = ({
   filters,
   setFilters,
-  maxPriceProduct,
 }: {
   filters: FiltersProps;
   setFilters: React.Dispatch<React.SetStateAction<FiltersProps>>;
-  maxPriceProduct: number;
 }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [Categories, setCategories] = React.useState<CategoriesProps[]>([]);
   const [filtersTemp, setFiltersTemp] = useState<FiltersProps>(filters);
-
-  const Heading = ({
-    title,
-    description,
-  }: {
-    title: string;
-    description?: string;
-  }) => {
-    return (
-      <div>
-        <h3 className="font-medium leading-8 text-default-600 text-large">
-          {title}
-        </h3>
-        <p className="text-small text-default-400">{description}</p>
-      </div>
-    );
-  };
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>(
+    []
+  );
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const fetchedCategories = await getCategories();
-      setCategories(fetchedCategories);
+      try {
+        const fc = await getCategories();
+        setCategories(fc);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
     };
-
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    setFiltersTemp(filters);
+  }, [filters]);
 
   const applyFilters = () => {
     setFilters(filtersTemp);
   };
 
   const clearFilters = () => {
-    const fltr = {
+    const defaultFilters = {
       sort: {
         title: "rating",
         method: "desc",
       },
-      price: {
-        min: 0,
-        max: 1000,
+      totalPrice: {
+        max: filtersTemp.totalPrice.max,
+        min: filtersTemp.totalPrice.min,
+      },
+      rangePrice: {
+        max: filtersTemp.totalPrice.max,
+        min: filtersTemp.totalPrice.min,
       },
     };
-    setFilters(fltr);
-    setFiltersTemp(fltr);
+    setFilters(defaultFilters);
   };
 
   return (
@@ -166,30 +155,37 @@ const ProductsFilters = ({
             <>
               <ModalHeader className="flex flex-col gap-1">
                 Фильтры
-                <hr className="shrink-0 border-none w-full h-divider my-3 bg-default-200" />
+                <hr className="shrink-0 border-none w-full h-divider mt-3 bg-default-200" />
               </ModalHeader>
               <ModalBody>
                 <div className="flex flex-col gap-6">
                   <div className="flex flex-col gap-3">
-                    <Heading title="Цена" />
+                    <div>
+                      <h3 className="font-medium leading-8 text-default-600 text-large">
+                        Цена
+                      </h3>
+                    </div>
                     <div className="flex flex-col gap-1">
                       <div className="flex flex-col gap-2 w-full h-full max-w-md items-start justify-center">
                         <Slider
                           label="Ценовой диапазон"
                           formatOptions={{ style: "currency", currency: "RUB" }}
                           step={1}
-                          maxValue={maxPriceProduct}
-                          minValue={0}
-                          value={[filtersTemp.price.min, filtersTemp.price.max]}
-                          onChange={(value: any) =>
+                          maxValue={filtersTemp.totalPrice.max}
+                          minValue={filtersTemp.totalPrice.min}
+                          value={[
+                            filtersTemp.rangePrice.min,
+                            filtersTemp.rangePrice.max,
+                          ]}
+                          onChange={(value: any) => {
                             setFiltersTemp((prevFilters) => ({
                               ...prevFilters,
-                              price: {
-                                min: Number(value[0]),
-                                max: Number(value[1]),
+                              rangePrice: {
+                                min: value[0],
+                                max: value[1],
                               },
-                            }))
-                          }
+                            }));
+                          }}
                           className="max-w-md"
                         />
                       </div>
@@ -199,12 +195,12 @@ const ProductsFilters = ({
                         type="number"
                         placeholder="0.00"
                         labelPlacement="outside"
-                        value={filtersTemp.price.min.toLocaleString()}
+                        value={filtersTemp.rangePrice.min.toString()}
                         onValueChange={(value) =>
                           setFiltersTemp((prevFilters) => ({
                             ...prevFilters,
-                            price: {
-                              ...prevFilters.price,
+                            rangePrice: {
+                              ...prevFilters.rangePrice,
                               min: Number(value),
                             },
                           }))
@@ -225,12 +221,12 @@ const ProductsFilters = ({
                         type="number"
                         placeholder="0.00"
                         labelPlacement="outside"
-                        value={filtersTemp.price.max.toLocaleString()}
+                        value={filtersTemp.rangePrice.max.toString()}
                         onValueChange={(value) =>
                           setFiltersTemp((prevFilters) => ({
                             ...prevFilters,
-                            price: {
-                              ...prevFilters.price,
+                            rangePrice: {
+                              ...prevFilters.rangePrice,
                               max: Number(value),
                             },
                           }))
@@ -246,8 +242,21 @@ const ProductsFilters = ({
                     </div>
                   </div>
                   <div className="flex flex-col gap-3">
-                    <Heading title="Рейтинг" />
-                    <div className="flex flex-col gap-1">13</div>
+                    <div>
+                      <h3 className="font-medium leading-8 text-default-600 text-large">
+                        Рейтинг
+                      </h3>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      {/* <Rating
+                        onValueChange={(value) =>
+                          setFiltersTemp((prevFilters) => ({
+                            ...prevFilters,
+                            rating: value,
+                          }))
+                        }
+                      /> */}
+                    </div>
                   </div>
                   <div className="flex flex-col gap-3">
                     <div className="flex flex-col gap-1">
@@ -264,8 +273,9 @@ const ProductsFilters = ({
                                 category: value,
                               }))
                             }
+                            defaultValue={filtersTemp.category}
                           >
-                            {Categories.map((category, index) => (
+                            {categories.map((category, index) => (
                               <Checkbox value={`${category.name}`} key={index}>
                                 {category.name}
                               </Checkbox>
@@ -281,16 +291,17 @@ const ProductsFilters = ({
                 <Button
                   color="primary"
                   onPress={() => {
-                    applyFilters(), onClose();
+                    onClose();
+                    applyFilters();
                   }}
                 >
                   Показать результаты
                 </Button>
                 <Button
                   variant="faded"
-                  onClick={() => {
-                    clearFilters();
+                  onPress={() => {
                     onClose();
+                    clearFilters();
                   }}
                 >
                   Убрать все фильтры
@@ -304,4 +315,4 @@ const ProductsFilters = ({
   );
 };
 
-export default ProductsFilters;
+export default Filters;

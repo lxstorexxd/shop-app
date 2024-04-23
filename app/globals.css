@@ -31,10 +31,6 @@
   border: 0;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   color: rgb(var(--foreground));
   background: var(--background);
