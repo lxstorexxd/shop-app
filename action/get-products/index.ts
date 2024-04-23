@@ -58,6 +58,10 @@ const getProducts = async ({
           in: filters.category,
         },
       },
+      rating: {
+        gte: filters.rating,
+        lt: filters.rating ? filters.rating + 1 : undefined,
+      },
     },
     orderBy: {
       [filters.sort.title]: filters.sort.method,
