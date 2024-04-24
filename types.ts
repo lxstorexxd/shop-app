@@ -19,7 +19,8 @@ export type Comment = {
   id: number;
   content: string;
   author: User;
-  authorId: String;
+  product?: ProductProps;
+  authorId: string;
   productId: number;
   rating: number;
   createdAt: Date;
