@@ -1,11 +1,17 @@
 import Icon from "@/lib/IconSprite";
 import { signOut, useSession } from "next-auth/react";
 import { Button } from "@nextui-org/react";
+import { useEffect, useState } from "react";
 
 const Footer = () => {
-  const isShopOpen =
-    new Date() >= new Date(new Date().setHours(7, 30, 0)) &&
-    new Date() <= new Date(new Date().setHours(21, 30, 0));
+  const [isShopOpen, setIsShopOpen] = useState<boolean>(true);
+
+  useEffect(() => {
+    setIsShopOpen(
+      new Date() >= new Date(new Date().setHours(7, 30, 0)) &&
+        new Date() <= new Date(new Date().setHours(21, 30, 0))
+    );
+  }, []);
 
   const { status } = useSession();
   return (
