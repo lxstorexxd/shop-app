@@ -2,12 +2,18 @@
 
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
-import { User } from "@nextui-org/react";
+import { User, Link } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import { getRandomComments } from "@/action/get-random-comments";
+import { Comment } from "@/types";
 
 export default function Home() {
-  const [chunksComment, setChunksComment] = useState<any[][]>([[], [], [], []]);
+  const [chunksComment, setChunksComment] = useState<Comment[][]>([
+    [],
+    [],
+    [],
+    [],
+  ]);
   const resizeColumns = [
     "flex",
     "hidden sm:flex",
@@ -18,7 +24,6 @@ export default function Home() {
   useEffect(() => {
     async function fetchComments() {
       const randomComments = await getRandomComments();
-      console.log(randomComments);
       setChunksComment(randomComments);
     }
 
@@ -37,7 +42,7 @@ export default function Home() {
                 className={`relative overflow-y-hidden max-h-[calc(100vh_-_200px)] ${resizeColumns[index]}`}
                 style={{
                   maskImage:
-                    "linear-gradient(0deg, #000 calc(100% - 20px), transparent), linear-gradient(0deg, #000 calc(100% - 20px), transparent);",
+                    "linear-gradient(0deg, #000 calc(100% - 20px), transparent), linear-gradient(0deg, #000 calc(100% - 20px), transparent)",
                 }}
               >
                 <div className="flex flex-none w-full items-stretch gap-4 flex-col h-full animate-scrolling-banner-vertical">
@@ -48,10 +53,18 @@ export default function Home() {
                     >
                       <div className="flex items-center gap-2">
                         <User
-                          name={data.name}
-                          description={new Date(
-                            data.createdAt
-                          ).toLocaleString()}
+                          classNames={{ wrapper: "flex-1" }}
+                          name={data.author.name}
+                          description={ 
+                            <Link
+                              href={`/products/${data.product?.handle}`}
+                              size="sm"
+                              isExternal
+                              className="leading-4 line-clamp-2"
+                            >
+                              О продукте {data.product?.title}
+                            </Link>
+                          }
                           avatarProps={{
                             src: data.author?.image ?? undefined,
                           }}
