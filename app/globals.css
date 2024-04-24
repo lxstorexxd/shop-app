@@ -91,14 +91,17 @@ a {
 
 .animate-scrolling-banner-vertical {
   animation: scrolling-banner-vertical 80s linear infinite;
+  -webkit-animation: scrolling-banner-vertical 80s linear infinite;
 }
 
 @keyframes scrolling-banner-vertical {
   0% {
     transform: translateY(0%);
+    -webkit-transform: translateY(0%);
   }
   100% {
     transform: translateY(-60%);
+    -webkit-transform: translateY(-60%);
   }
 }
 
