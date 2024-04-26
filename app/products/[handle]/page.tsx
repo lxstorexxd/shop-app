@@ -90,7 +90,7 @@ export default function ProductPage({
                   <Rating
                     value={product.rating}
                     isDisable={true}
-                    label={`${product.comments.length} Оценок`}
+                    label={`${product.comments?.length ?? 0} Оценок`}
                   />
                 </div>
                 <p className="text-2xl font-semibold tracking-tight">
