@@ -25,7 +25,6 @@ const PopularList = () => {
     <Swiper
       modules={[Autoplay]}
       loop={true}
-      spaceBetween={20}
       breakpoints={{
         600: {
           slidesPerView: 2,
