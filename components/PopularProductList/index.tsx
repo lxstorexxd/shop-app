@@ -26,7 +26,17 @@ const PopularList = () => {
       modules={[Autoplay]}
       loop={true}
       spaceBetween={20}
-      slidesPerView={4}
+      breakpoints={{
+        600: {
+          slidesPerView: 2,
+        },
+        880: {
+          slidesPerView: 3,
+        },
+        1200: {
+          slidesPerView: 4,
+        },
+      }}
       autoplay={{ delay: 10000 }}
       style={{
         maskImage:
