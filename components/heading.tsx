@@ -2,8 +2,8 @@ const Heading = ({
   title,
   descriptions,
 }: {
-  title?: string;
-  descriptions: string;
+  title: string;
+  descriptions?: string;
 }) => {
   return (
     <div className="text-center my-6">
