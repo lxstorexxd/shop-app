@@ -23,7 +23,7 @@ const Comments = ({ value }: { value: ProductProps }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [rating, setRating] = useState(0);
   const { data: session, status, update } = useSession();
-  const [comments, setComments] = useState<Comment[]>(value.comments);
+  const [comments, setComments] = useState<Comment[]>(value.comments ?? []);
 
   useEffect(() => {
     if (status === "authenticated" || status === "loading") update();
@@ -81,7 +81,7 @@ const Comments = ({ value }: { value: ProductProps }) => {
               {value.rating.toFixed(1)}
             </span>
             <span className="text-right text-small text-default-500 lg:text-medium">
-              (Основано на {value.comments.length} отзывах)
+              (Основано на {value.comments?.length ?? 0} отзывах)
             </span>
           </div>
         </div>
