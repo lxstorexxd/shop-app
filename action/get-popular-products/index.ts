@@ -6,6 +6,11 @@ const getPopularProducts = async (count = 5) => {
     take: count,
     include: {
       imageUrl: true,
+      comments: {
+        select: {
+          id: true,
+        },
+      },
     },
     orderBy: {
       rating: "desc",
