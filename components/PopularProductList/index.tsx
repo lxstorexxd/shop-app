@@ -37,7 +37,7 @@ const PopularList = () => {
           slidesPerView: 4,
         },
       }}
-      autoplay={{ delay: 10000 }}
+      autoplay={{ delay: 5000 }}
       style={{
         maskImage:
           "linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 4%, rgba(0,0,0,1) 96%, rgba(0,0,0,0) 100%);",
