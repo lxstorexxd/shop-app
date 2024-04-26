@@ -11,7 +11,7 @@ export interface ProductProps {
   rating: number;
   quantity: number;
   imageUrl?: ImageUrl[];
-  comments: Comment[];
+  comments?: Comment[];
 }
 
 // Интерфейс для комментариев
