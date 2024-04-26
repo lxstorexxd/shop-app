@@ -7,9 +7,10 @@ import { CartContext } from "@/components/CartContext";
 import { ProductProps } from "@/types";
 import { getPopularProducts } from "@/action/get-popular-products";
 import Icon from "@/lib/IconSprite";
+import Rating from "@/components/Rating";
 
 const PopularList = () => {
-  const [products, setProducts] = useState<ProductProps[]>();
+  const [products, setProducts] = useState<any[]>();
   const { addToCart } = useContext(CartContext);
 
   useEffect(() => {
@@ -28,18 +29,21 @@ const PopularList = () => {
       breakpoints={{
         600: {
           slidesPerView: 2,
+          spaceBetween: 0,
         },
         880: {
           slidesPerView: 3,
+          spaceBetween: 0,
         },
         1200: {
           slidesPerView: 4,
+          spaceBetween: 0,
         },
       }}
-      autoplay={{ delay: 5000 }}
+      autoplay={{ delay: 10000 }}
       style={{
         maskImage:
-          "linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 4%, rgba(0,0,0,1) 96%, rgba(0,0,0,0) 100%);",
+          "linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 4%, rgba(0,0,0,1) 96%, rgba(0,0,0,0) 100%)",
       }}
     >
       {products &&
@@ -68,15 +72,21 @@ const PopularList = () => {
                   alt={product.title}
                 />
               </div>
-              <div className="flex flex-col gap-3 px-1">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-medium font-medium text-default-700 line-clamp-1 text-balance flex-1 text-left">
-                    {product.title}
-                  </h3>
-                  <p className="text-medium font-semibold text-default-500">
-                    {product.price} ₽
-                  </p>
+              <div className="flex flex-col gap-4 px-1">
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-medium font-medium text-default-700 line-clamp-1 text-balance flex-1 text-left">
+                      {product.title}
+                    </h3>
+                    <p className="text-medium font-semibold text-default-500">
+                      {product.price} ₽
+                    </p>
+                  </div>
+                  <div className="flex justify-start">
+                    <Rating value={product.rating} isDisable isCompact label={`(${product.comments?.length})`} />
+                  </div>
                 </div>
+
                 <div className="flex gap-2">
                   <Button
                     color="primary"
