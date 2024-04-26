@@ -8,6 +8,7 @@ import React, {
   useEffect,
 } from "react";
 import { CartItem, ProductProps } from "@/types";
+import { toast } from "sonner";
 
 export const CartContext = createContext<{
   cart: CartItem[];
@@ -47,6 +48,7 @@ export const ContextProvider = ({
           : item
       );
       setCart(updatedCart);
+      toast.success(`${productToAdd.title}`, {description: `Пополнение товара (${existingCartItem.quantity + 1})`});
     } else {
       const newCartItem: CartItem = {
         id: productToAdd.id,
@@ -54,6 +56,7 @@ export const ContextProvider = ({
         product: productToAdd,
       };
       setCart([...cart, newCartItem]);
+      toast.success(`${productToAdd.title}`, {description: 'Товар добавлен в корзину'});
     }
   };
 

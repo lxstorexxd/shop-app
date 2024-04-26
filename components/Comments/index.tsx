@@ -17,6 +17,7 @@ import React, { useEffect, useState } from "react";
 import ModalAuthorization from "@/components//ModalAuthorization";
 import { useSession } from "next-auth/react";
 import { createComment } from "@/action/create-comment";
+import { toast } from "sonner";
 
 const Comments = ({ value }: { value: ProductProps }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -39,6 +40,26 @@ const Comments = ({ value }: { value: ProductProps }) => {
           productId: value.id,
         });
         setComments((prevComments) => [...prevComments, newComment]);
+        const promise = () =>
+          new Promise((resolve, reject) => {
+            setTimeout(() => {
+              if (newComment) {
+                resolve(newComment);
+              } else {
+                reject(new Error("Ошибка при создании комментария"));
+              }
+            }, 2000);
+          });
+
+        toast.promise(promise, {
+          loading: "Loading...",
+          success: (data) => {
+            return "Комментарий опубликован";
+          },
+          error: (error) => {
+            return error.message || "Произошла ошибка";
+          },
+        });
       } else {
         console.log("Сессия не определена, войдите в аккаунт повторно.");
       }
