@@ -54,8 +54,7 @@ export default function Home() {
                   key={index}
                   className={`relative overflow-y-hidden max-h-[calc(100vh_-_200px)] ${resizeColumns[index]}`}
                   style={{
-                    maskImage:
-                      "linear-gradient(0deg, #000 calc(100% - 20px), transparent)",
+                    maskImage: "linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 4%, rgba(0,0,0,1) 96%, rgba(0,0,0,0) 100%)",
                   }}
                 >
                   <div className="flex flex-none w-full items-stretch gap-4 flex-col h-full animate-scrolling-banner-vertical">
