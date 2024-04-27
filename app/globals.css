@@ -90,8 +90,8 @@ a {
 }
 
 .animate-scrolling-banner-vertical {
-  animation: scrolling-banner-vertical 80s linear infinite;
-  -webkit-animation: scrolling-banner-vertical 80s 0.1s linear infinite;
+  animation: scrolling-banner-vertical 60s linear infinite;
+  -webkit-animation: scrolling-banner-vertical 60s 0.1s linear infinite;
 }
 
 @keyframes scrolling-banner-vertical {
