@@ -61,3 +61,9 @@ export interface Error {
     description: string;
   };
 }
+
+
+export interface SliderNews {
+  id: string;
+  
+}

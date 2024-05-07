@@ -106,3 +106,8 @@ model Category {
   name     String
   products Product[]
 }
+
+model SliderNews {
+  id String @id @default(cuid())
+  
+}
