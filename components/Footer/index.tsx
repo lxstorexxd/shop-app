@@ -48,7 +48,7 @@ const Footer = () => {
               Выйти из системы
             </Button>
           )}
-          <p className="text-sm">© 2024 Orexxd. Все права защищены.</p>
+          <p className="text-sm">© 2024 Лис. Все права защищены.</p>
         </div>
       </div>
     </footer>
